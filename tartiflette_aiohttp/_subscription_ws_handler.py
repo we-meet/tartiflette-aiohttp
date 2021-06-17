@@ -4,7 +4,7 @@ from asyncio import CancelledError, create_task, ensure_future, shield, wait
 from contextlib import suppress
 from typing import Any, AsyncIterator, Callable, Dict, Optional, Set
 
-from aiohttp import WSMsgType, web
+from aiohttp import WSCloseCode, WSMsgType, web
 
 from tartiflette_aiohttp._constants import (
     GQL_COMPLETE,
@@ -263,6 +263,9 @@ class AIOHTTPSubscriptionHandler:
         self._socket = web.WebSocketResponse(protocols=(WS_PROTOCOL,))
         async with self._context_factory(request) as ctx:
             self._context = ctx
-            await self._socket.prepare(request)
-            await shield(self._handle_request())
+            try:
+                await self._socket.prepare(request)
+                await shield(self._handle_request())
+            except CancelledError:
+                await self._socket.close(code=WSCloseCode.GOING_AWAY, message='Client closed the connection.')
             return self._socket
