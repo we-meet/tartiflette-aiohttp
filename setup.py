@@ -24,7 +24,7 @@ setup(
     description="Runs a Tartiflette GraphQL Engine through aiohttp",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/tartiflette/tartiflette-aiohttp",
+    url="https://github.com/we-meet/tartiflette-aiohttp",
     author="Dailymotion Core API Team",
     author_email="team@tartiflette.io",
     license="MIT",
